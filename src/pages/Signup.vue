@@ -44,6 +44,19 @@
               <q-input
                 square
                 clearable
+                v-model="code"
+                type="text"
+                label="Registration Code"
+              >
+                <template v-slot:prepend>
+                  <q-icon
+                    name="pin"
+                  />
+                </template>
+              </q-input>
+              <q-input
+                square
+                clearable
                 v-model="password"
                 type="password"
                 label="Password"
@@ -125,6 +138,7 @@ export default {
     return {
       phone_number: '',
       email: '',
+      code: '',
       password: '',
       password_confirmation: ''
     }
@@ -134,6 +148,7 @@ export default {
       const formData = {
         phone_number: this.phone_number,
         email: this.email,
+        code: this.code,
         password: this.password,
         password_confirmation: this.password_confirmation
       }
@@ -142,6 +157,7 @@ export default {
     onReset () {
       this.phone_number = null
       this.email = null
+      this.code = null
       this.password = null
       this.password_confirmation = null
     }

@@ -5,6 +5,7 @@ export function signup ({ commit }, formData) {
     api.post('/api/v1/register', {
         phone_number: formData.phone_number,
         email: formData.email,
+        code: formData.code,
         password: formData.password,
         password_confirmation: formData.password_confirmation,
         returnSecureToken: true
