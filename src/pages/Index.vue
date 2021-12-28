@@ -191,23 +191,6 @@ export default defineComponent({
       
   },
 
-  watch: {
-
-            timerCount: {
-                handler(value) {
-
-                    if (value > 0) {
-                        setTimeout(() => {
-                            this.timerCount--;
-                        }, 1000);
-                    }
-
-                },
-                immediate: true // This ensures the watcher is triggered upon creation
-            }
-
-        }
-
   methods: {
     // ...
     subscribe () {
