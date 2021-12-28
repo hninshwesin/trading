@@ -179,14 +179,14 @@ export default defineComponent({
         this.order = response.data.data
         this.order_compare = this.order.bid_compare
       })
-      .catch(() => {
-        this.$q.notify({
-          color: 'negative',
-          position: 'top',
-          message: 'Loading failed',
-          icon: 'report_problem'
-        })
-      })
+      // .catch(() => {
+      //   this.$q.notify({
+      //     color: 'negative',
+      //     position: 'top',
+      //     message: 'Loading failed',
+      //     icon: 'report_problem'
+      //   })
+      // })
 
       
   },
