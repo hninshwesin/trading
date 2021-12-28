@@ -1,7 +1,7 @@
 <template>
   <q-layout view="hHh Lpr lFf">
     <q-header elevated>
-      <q-toolbar class="bg-light-blue-7">
+      <q-toolbar class="primary">
         <q-btn
           flat
           dense
@@ -31,11 +31,19 @@
         class="text-grey"
       >
         <q-route-tab
-          icon="home"
+          icon="assessment"
           to="/home"
           replace
           hide="icon"
-          label="Home"
+          label="Chart"
+          class="q-mr-md"
+        />
+        <q-route-tab
+          icon="account_balance_wallet"
+          to="/wallet"
+          replace
+          hide="icon"
+          label="Wallet"
           class="q-mr-md"
         />
       </q-tabs>

@@ -17,6 +17,7 @@
     "numeral": "^2.0.6",
     "pusher-js": "^7.0.3",
     "quasar": "^2.0.0",
+    "vue-plugin-load-script": "^2.1.0",
     "vue3-apexcharts": "^1.4.1",
     "vuex": "^4.0.2"
   },

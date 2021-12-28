@@ -22,11 +22,12 @@
               class="text-h4 q-mt-sm q-mb-xs text-weight-bolder"
               style="color: #F4A601"
             >
-              {{mydata.total_balance }} mmk
+              {{mydata.wallet_balance }} mmk
 
             </div>
           </q-card-section>
         </q-card>
+        <span class="text-overline text-weight-bold">Admin Fees will take 17% from your wallet</span>
       </div>
     </div>
   </q-page>

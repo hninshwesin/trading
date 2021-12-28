@@ -11,6 +11,7 @@ export function signup ({ commit }, formData) {
         returnSecureToken: true
     })
         .then(res => {
+            // console.log(res.data)
             localStorage.setItem('token', res.data.access_token)
             localStorage.setItem('userId', res.data.app_user.id)
             commit('authUser', res)
