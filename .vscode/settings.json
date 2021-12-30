@@ -17,13 +17,13 @@
   "typescript.format.placeOpenBraceOnNewLineForFunctions": false,
   "vetur.format.defaultFormatter.html": "js-beautify-html",
   "vetur.format.defaultFormatter.js": "vscode-typescript",
-  // "vetur.validation.template": false,
-  // "vetur.format.enable": false,
-  // "eslint.validate": [
-  //   "javascript",
-  //   "javascriptreact",
-  //   "typescript",
-  //   "vue"
-  // ],
+  "vetur.validation.template": false,
+  "vetur.format.enable": false,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "vue"
+  ],
   "vetur.experimental.templateInterpolationService": true
 }
