@@ -6,7 +6,7 @@
       style="width: 200px; height: 200px"
     > -->
 
-    <div class="tradingview-widget-container">
+    <!-- <div class="tradingview-widget-container">
       <div id="tradingview_acc89"></div>
       <div class="tradingview-widget-copyright">
         <a
@@ -17,15 +17,31 @@
         >
         by TradingView
       </div>
-    </div>
-
-    <!-- <div id="chart">
-      <apexchart type="candlestick" height="350" :options="chartOptions" :series="series"></apexchart>
     </div> -->
+
+    <div id="chart">
+      <apexchart
+        type="candlestick"
+        height="350"
+        :options="chartOptions"
+        :series="series"
+      ></apexchart>
+    </div>
 
     <div class="q-pa-md items-start">
       <q-card class="my-card full-width" bordered>
-        <q-form @submit="onSubmit">
+        <q-card-section>
+          <div
+            v-for="(mydata, index) in data"
+            :key="index"
+            class="text-subtitle1"
+            style="color: #242c33"
+          >
+            Your Current Balance is {{ mydata.wallet_balance }} MMK
+          </div>
+        </q-card-section>
+        <!-- <q-form @submitBuy="onSubmitBuy" @submitSell="onSubmitSell"> -->
+        <q-form @submit.prevent="">
           <q-card-section>
             <div class="input">
               <q-input
@@ -66,9 +82,28 @@
               </q-select>
             </div>
           </q-card-section>
-          <q-card-section>
-            <q-btn class="buy" label=" BUY " type="submit" />
-          </q-card-section>
+          <div class="flex flex-center">
+            <q-card-section>
+              <!-- <q-btn class="buy" label=" BUY " type="submitBuy" /> -->
+              <!-- <q-btn class="buy" label=" BUY " @click="BuySubmit" /> -->
+              <q-btn
+                class="buy"
+                label=" BUY "
+                type="submit"
+                @click="BuySubmit"
+              />
+            </q-card-section>
+            <q-card-section>
+              <!-- <q-btn class="sell" label=" SELL " type="submitSell" /> -->
+              <!-- <q-btn class="sell" label=" SELL " @click="SellSubmit" /> -->
+              <q-btn
+                class="sell"
+                label=" SELL "
+                type="submit"
+                @click="SellSubmit"
+              />
+            </q-card-section>
+          </div>
         </q-form>
       </q-card>
     </div>
@@ -79,7 +114,9 @@
       v-if="current_order.stock_rate"
     >
       <q-card-section>
-        <div class="text-h6">Open Price is {{ current_order.stock_rate }}</div>
+        <div class="text-h6 text-weight-bold doc-token">
+          Open Price is {{ current_order.stock_rate }}
+        </div>
       </q-card-section>
     </q-card>
     <!-- </div> -->
@@ -89,8 +126,13 @@
       v-else
     >
       <q-card-section>
-        <q-badge color="teal" outline text-color="black" align="middle">
-          <q-icon name="warning" size="20px" class="q-ml-xs" />
+        <q-badge
+          color="black"
+          class="text-subtitle2 text-weight-bold"
+          outline
+          align="middle"
+        >
+          <q-icon name="warning" color="warning" size="20px" class="q-ml-xs" />
           Currently you doesn't have any buy or sell price
         </q-badge>
         <!-- <q-badge outline align="middle" color="teal" font-size="15px">
@@ -103,7 +145,7 @@
 
     <q-separator />
 
-    <div class="q-pa-md doc-container">
+    <!-- <div class="q-pa-md doc-container">
       <div class="text-h6 title">Your Last Order</div>
       <div class="row items-center">
         <div class="col">Open Price</div>
@@ -125,21 +167,107 @@
             style="background-color: yellow"
           >
             {{ order.amount }}
-            <q-icon name="fas fa-exchange-alt" color="black" />
           </div>
           <div
             v-if="order_compare.status === 1"
             style="background-color: green"
           >
             {{ order.amount }}
-            <q-icon name="fas fa-level-up-alt" color="black" />
           </div>
           <div v-if="order_compare.status === 2" style="background-color: red">
             {{ order.amount }}
-            <q-icon name="fas fa-level-down-alt" color="black" />
           </div>
         </div>
       </div>
+    </div> -->
+    <!-- <q-icon name="fas fa-exchange-alt" color="black" /> -->
+    <!-- <q-icon name="fas fa-level-up-alt" color="black" /> -->
+    <!-- <q-icon name="fas fa-level-down-alt" color="black" /> -->
+    <div class="q-pa-md">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Your Last Order</div>
+        </q-card-section>
+        <q-table :rows="order" :columns="columns" row-key="name" hide-bottom>
+          <template v-slot:body-cell-stock_rate="props">
+            <q-td :props="props">
+              <div>
+                <q-badge
+                  color="purple"
+                  class="text-subtitle2"
+                  :label="props.value"
+                />
+              </div>
+              <div class="my-table-details">
+                {{ props.row.created_at }}
+              </div>
+            </q-td>
+          </template>
+          <template v-slot:body-cell-end_rate="props">
+            <q-td :props="props">
+              <div>
+                <q-badge
+                  color="purple"
+                  class="text-subtitle2"
+                  :label="props.value"
+                />
+              </div>
+              <div class="my-table-details">
+                {{ props.row.bid_compare.created_at }}
+              </div>
+            </q-td>
+          </template>
+          <template v-slot:body-cell-status="props">
+            <q-td :props="props">
+              <div v-if="props.value == 1">
+                <q-badge
+                  color="green"
+                  label="WIN"
+                  class="text-caption text-weight-bold"
+                />
+              </div>
+              <div v-if="props.value == 2">
+                <q-badge
+                  color="red"
+                  label="LOSS"
+                  class="text-caption text-weight-bold"
+                />
+              </div>
+              <div v-if="props.value == 0">
+                <q-badge
+                  color="yellow"
+                  label="STABLE"
+                  class="text-caption text-weight-bold"
+                />
+              </div>
+            </q-td>
+          </template>
+          <!-- <template v-slot:body="props">
+          <q-tr :props="props">
+            <q-td key="name" :props="props">
+              {{ props.row.name }}
+            </q-td>
+            <q-td key="calories" :props="props">
+              <q-badge color="green">
+                {{ props.row.name }}
+              </q-badge>
+            </q-td>
+          </q-tr>
+        </template> -->
+        </q-table>
+      </q-card>
+    </div>
+    <div class="col">
+      <q-btn
+        class="text-subtitle1 text-weight-bold"
+        color="deep-orange-10"
+        dense
+        round
+        flat
+        @click="$router.push('order_history')"
+        label="Check Order History >>"
+        no-caps
+      ></q-btn>
     </div>
   </q-page>
 </template>
@@ -149,6 +277,7 @@ import { defineComponent } from "vue";
 import { api } from "boot/axios";
 import Pusher from "pusher-js"; // import Pusher
 // import { loadScript } from "vue-plugin-load-script";
+import dayjs from "dayjs";
 
 export default defineComponent({
   name: "PageIndex",
@@ -159,20 +288,11 @@ export default defineComponent({
           data: [],
 
           // data: [
-          //   {
-          //     x: 1638773914000,
-          //     y: [ 1783.34, 1787.83, 1780.8, 1784.55 ]
-          //   },
-          //   { x: 1638773915000,
-          //   y: [ 1783.34, 1787.83, 1780.8, 1784.55 ]
-          //   },
-          //   { x: 1638773916000,
-          //   y: [ 1783.34, 1787.83, 1780.8, 1784.55 ]
-          //   },
-          //   { x: 1638773917000,
-          //   y: [ 1883.34, 1787.83, 1780.8, 1784.59 ]
-          //   }
-          // ]
+          //   { x: 1638773914000, y: [2773.34, 2787.83, 2780.8, 2784.55] },
+          //   { x: 1638773915000, y: [2753.34, 2787.83, 2780.8, 2784.55] },
+          //   { x: 1638773916000, y: [2783.34, 2783.83, 2780.8, 2784.55] },
+          //   { x: 1638773917000, y: [2883.34, 2787.83, 2780.8, 2784.59] },
+          // ],
         },
       ],
       chartOptions: {
@@ -185,7 +305,13 @@ export default defineComponent({
           align: "left",
         },
         xaxis: {
-          type: "datetime",
+          // type: "datetime",
+          type: "category",
+          labels: {
+            formatter: function (val) {
+              return dayjs(val).format("MMM DD HH:mm:ss");
+            },
+          },
         },
         yaxis: {
           tooltip: {
@@ -201,34 +327,88 @@ export default defineComponent({
         { label: "5 minute", value: "5" },
       ],
       // buy_popup : false
-      order: {},
-      order_compare: {},
+      data: [],
+      order: [],
       current_order: "",
       // order_minute: null,
+      columns: [
+        {
+          name: "stock_rate",
+          required: true,
+          align: "center",
+          label: "Open Price",
+          field: (row) => row.stock_rate,
+          // format: (val) => `${val}`,
+          // sortable: true,
+          // style: "width: 500px",
+          // headerStyle: "width: 500px;padding-inline: 10px",
+        },
+        {
+          name: "end_rate",
+          required: true,
+          align: "center",
+          label: "Close Price",
+          field: (row) => row.bid_compare.end_rate,
+          // format: (val) => `${val}`,
+          // sortable: true,
+          // style: "width: 500px",
+          // headerStyle: "width: 500px;padding-inline: 10px",
+        },
+        {
+          name: "amount",
+          required: true,
+          align: "center",
+          label: "Amount",
+          field: "amount",
+        },
+        {
+          name: "status",
+          required: true,
+          align: "center",
+          label: "Status",
+          field: (row) => row.bid_compare.status,
+        },
+      ],
     };
   },
   created() {
-    // ...
-    this.$loadScript("https://s3.tradingview.com/tv.js")
-      .then(() => {
-        new TradingView.widget({
-          width: 980,
-          height: 610,
-          symbol: "NASDAQ:AAPL",
-          interval: "D",
-          timezone: "Etc/UTC",
-          theme: "light",
-          style: "1",
-          locale: "en",
-          toolbar_bg: "#f1f3f6",
-          enable_publishing: false,
-          allow_symbol_change: true,
-          container_id: "tradingview_acc89",
-        });
+    api.defaults.headers.Authorization =
+      `Bearer ` + localStorage.getItem("token");
+    api
+      .get("/api/v1/service_start")
+      .then((response) => {
+        this.series[0].data = response.data.data;
+        console.log(this.series[0].data);
       })
       .catch(() => {
-        // Failed to fetch script
+        this.$q.notify({
+          color: "negative",
+          position: "top",
+          message: "Loading failed",
+          icon: "report_problem",
+        });
       });
+    // ...
+    // this.$loadScript("https://s3.tradingview.com/tv.js")
+    //   .then(() => {
+    //     new TradingView.widget({
+    //       width: 980,
+    //       height: 610,
+    //       symbol: "NASDAQ:AAPL",
+    //       interval: "D",
+    //       timezone: "Etc/UTC",
+    //       theme: "light",
+    //       style: "1",
+    //       locale: "en",
+    //       toolbar_bg: "#f1f3f6",
+    //       enable_publishing: false,
+    //       allow_symbol_change: true,
+    //       container_id: "tradingview_acc89",
+    //     });
+    //   })
+    //   .catch(() => {
+    //     // Failed to fetch script
+    //   });
 
     this.subscribe();
 
@@ -236,20 +416,27 @@ export default defineComponent({
       `Bearer ` + localStorage.getItem("token");
     api.get("/api/v1/last_order_history").then((response) => {
       this.order = response.data.data;
-      this.order_compare = this.order.bid_compare;
     });
-    // .catch(() => {
-    //   this.$q.notify({
-    //     color: 'negative',
-    //     position: 'top',
-    //     message: 'Loading failed',
-    //     icon: 'report_problem'
-    //   })
-    // })
+
+    api.defaults.headers.Authorization =
+      `Bearer ` + localStorage.getItem("token");
+    api
+      .get("/api/v1/get_total_balance")
+      .then((response) => {
+        this.data = response.data.data;
+        // console.log(this.data)
+      })
+      .catch(() => {
+        this.$q.notify({
+          color: "negative",
+          position: "top",
+          message: "Loading failed",
+          icon: "report_problem",
+        });
+      });
   },
 
   methods: {
-    // ...
     subscribe() {
       const app = this;
       Pusher.logToConsole = true;
@@ -260,14 +447,15 @@ export default defineComponent({
       });
       var channel = pusher.subscribe("goldapiData");
       channel.bind("App\\Events\\GoldPriceSend", function (data) {
+        if (app.series[0].data.length > 20) app.series[0].data.shift();
         app.series[0].data.push(data.goldapi);
       });
     },
-    onSubmit() {
+    BuySubmit() {
       if (this.minute.value != null && this.amount.length != 0) {
         // this.buy_popup = true;
-        // console.log(this.amount)
-        // console.log(this.minute.value)
+        console.log(this.amount);
+        console.log(this.minute.value);
 
         const formData = new FormData();
         formData.append("amount", this.amount);
@@ -275,30 +463,97 @@ export default defineComponent({
         api.defaults.headers.Authorization =
           `Bearer ` + localStorage.getItem("token");
         api
-          .post("/api/v1/order_create", formData)
+          .post("/api/v1/buy_order_create", formData)
           .then((response) => {
+            console.log("buy");
+            console.log(response.data.order.bid_status);
             if (response.data.error_code === "0") {
               this.current_order = response.data.order;
               console.log(this.current_order);
               console.log(response.data.order.minute);
               if (response.data.order.minute === "1") {
-                console.log("hello 1 minute");
+                // console.log("hello 1 minute");
                 setTimeout(function () {
                   // this.$router.go('/home')
                   location.reload();
-                }, 60000);
+                }, 63000);
               }
               if (response.data.order.minute === "3") {
-                console.log("hello 3 minute");
+                // console.log("hello 3 minute");
                 setTimeout(function () {
                   location.reload();
-                }, 180000);
+                }, 183000);
               }
               if (response.data.order.minute === "5") {
-                console.log("hello 5 minute");
+                // console.log("hello 5 minute");
                 setTimeout(function () {
                   location.reload();
-                }, 300000);
+                }, 303000);
+              }
+
+              this.$q.notify({
+                type: "positive",
+                message: response.data.message,
+              });
+            } else {
+              this.$q.notify({
+                type: "negative",
+                message: response.data.message,
+              });
+            }
+          })
+          .catch((err) => {
+            // console.log(err.response.data)
+            this.$q.notify({
+              type: "negative",
+              message: err.response.data.message,
+            });
+          });
+      } else {
+        this.$q.notify({
+          type: "negative",
+          message: "Field is required",
+        });
+      }
+    },
+    SellSubmit() {
+      if (this.minute.value != null && this.amount.length != 0) {
+        // this.buy_popup = true;
+        console.log(this.amount);
+        console.log(this.minute.value);
+
+        const formData = new FormData();
+        formData.append("amount", this.amount);
+        formData.append("minute", this.minute.value);
+        api.defaults.headers.Authorization =
+          `Bearer ` + localStorage.getItem("token");
+        api
+          .post("/api/v1/sell_order_create", formData)
+          .then((response) => {
+            console.log("buy");
+            console.log(response.data.order.bid_status);
+            if (response.data.error_code === "0") {
+              this.current_order = response.data.order;
+              console.log(this.current_order);
+              console.log(response.data.order.minute);
+              if (response.data.order.minute === "1") {
+                // console.log("hello 1 minute");
+                setTimeout(function () {
+                  // this.$router.go('/home')
+                  location.reload();
+                }, 63000);
+              }
+              if (response.data.order.minute === "3") {
+                // console.log("hello 3 minute");
+                setTimeout(function () {
+                  location.reload();
+                }, 183000);
+              }
+              if (response.data.order.minute === "5") {
+                // console.log("hello 5 minute");
+                setTimeout(function () {
+                  location.reload();
+                }, 303000);
               }
 
               this.$q.notify({
@@ -354,42 +609,43 @@ export default defineComponent({
     //   this.series[0].data.push(
     //     {
     //       x: 1638773918000,
-    //       y: [3587.81, 3595, 3583.27, 3591.96]
+    //       y: [2587.81, 2595, 2583.27, 2591.96],
     //     },
     //     {
     //       x: 1638773920000,
-    //       y: [2604.98, 2606, 2604.07, 2604]
-    //     },
-    //   // [
-    //   //   {
-    //   //           x: new Date(1538865000000),
-    //   //           y: [6587.81, 6595, 6583.27, 6591.96]
-    //   //         },
-    //   //         {
-    //   //           x: new Date(1538884800000),
-    //   //           y: [6604.98, 6606, 6604.07, 6606]
-    //   //         },
-    //   // ]
-    // )}, 5000);
+    //       y: [2604.98, 2606, 2604.07, 2604],
+    //     }
+    //     // [
+    //     //   {
+    //     //           x: new Date(1538865000000),
+    //     //           y: [6587.81, 6595, 6583.27, 6591.96]
+    //     //         },
+    //     //         {
+    //     //           x: new Date(1538884800000),
+    //     //           y: [6604.98, 6606, 6604.07, 6606]
+    //     //         },
+    //     // ]
+    //   );
+    // }, 5000);
 
     // console.log(this.series[0].data);
 
-    api.defaults.headers.Authorization =
-      `Bearer ` + localStorage.getItem("token");
-    api
-      .get("/api/v1/service_start")
-      .then((response) => {
-        this.series[0].data = response.data.data;
-        // console.log(this.series[0].data)
-      })
-      .catch(() => {
-        this.$q.notify({
-          color: "negative",
-          position: "top",
-          message: "Loading failed",
-          icon: "report_problem",
-        });
-      });
+    // api.defaults.headers.Authorization =
+    //   `Bearer ` + localStorage.getItem("token");
+    // api
+    //   .get("/api/v1/service_start")
+    //   .then((response) => {
+    //     this.series[0].data = response.data.data;
+    //     console.log(this.series[0].data);
+    //   })
+    //   .catch(() => {
+    //     this.$q.notify({
+    //       color: "negative",
+    //       position: "top",
+    //       message: "Loading failed",
+    //       icon: "report_problem",
+    //     });
+    //   });
   },
 });
 </script>
@@ -399,6 +655,7 @@ export default defineComponent({
   background-color: #daf8e1;
   border-radius: 25px;
   border: 5px solid #9cedaf;
+  box-shadow: 2px 2px 22px -2px rgba(0, 0, 0, 0.25);
 }
 .input {
   width: auto; /* 151px */
@@ -439,11 +696,34 @@ export default defineComponent({
   font-family: ".SFNSDisplay-Semibold", "SFProDisplay-Semibold",
     "SFUIDisplay-Semibold", ".SFUIDisplay-Semibold", "SF Pro Display",
     "-apple-system", "BlinkMacSystemFont", sans-serif;
-  background-color: greenyellow;
+  background-color: rgb(42, 211, 42);
   font-size: 18px;
+  color: white;
   letter-spacing: 0px;
   line-height: 1.2;
   /* padding: 0 20px */
+}
+
+.sell {
+  padding-top: 8px;
+  overflow: visible;
+  white-space: pre;
+  font-weight: 599;
+  font-family: ".SFNSDisplay-Semibold", "SFProDisplay-Semibold",
+    "SFUIDisplay-Semibold", ".SFUIDisplay-Semibold", "SF Pro Display",
+    "-apple-system", "BlinkMacSystemFont", sans-serif;
+  background-color: red;
+  font-size: 18px;
+  color: white;
+  letter-spacing: 0px;
+  line-height: 1.2;
+  /* padding: 0 20px */
+}
+
+.doc-token {
+  background: #ffdfe3;
+  border-color: #ff808e;
+  border-radius: 20px;
 }
 
 .row > div {

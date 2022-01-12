@@ -1,6 +1,8 @@
 import { boot } from 'quasar/wrappers'
 import axios from 'axios'
 import VueApexCharts from "vue3-apexcharts";
+import dayjs from 'dayjs'
+
 
 // Be careful when using SSR for cross-request state pollution
 // due to creating a Singleton instance here;
@@ -22,9 +24,10 @@ export default boot(({ app }) => {
   app.config.globalProperties.$api = api
   // ^ ^ ^ this will allow you to use this.$api (for Vue Options API form)
   //       so you can easily perform requests against your app's API
+app.config.globalProperties.$dayjs = dayjs
 
   app.use(VueApexCharts);
 
 })
 
-export { axios, api }
+export { axios, api}

@@ -1,44 +1,20 @@
 <template>
   <q-page class="text-center" padding>
-    <div class="q-pa-md" style="color: #0892d1; padding: 20px">
-      <q-card
-        class="my-card"
-        bordered
-        v-for="(mydata, index) in data"
-        :key="index"
-      >
-        <q-card-section>
-          <div class="text-h5" style="color: #1d1d1d">
-            95{{ mydata.phone_number }}
-          </div>
-        </q-card-section>
-        <q-separator />
-        <q-card-section class="text-h5" style="color: #26a69a"
-          >Your Current Balance
-        </q-card-section>
-        <q-card-section class="text-center">
-          <div class="text-h4 text-weight-bolder" style="color: #f4a601">
-            {{ mydata.wallet_balance }} mmk
-          </div>
-        </q-card-section>
-      </q-card>
-    </div>
     <div class="q-pa-md">
       <q-card>
-        <!-- <q-card-section>
-          <div class="text-h6">Your Deposit History</div>
-        </q-card-section> -->
+        <q-card-section>
+          <div class="text-h6">Your Order History</div>
+        </q-card-section>
         <q-table
-          :rows="deposit"
+          :rows="data"
           :columns="columns"
-          title="Your Deposit History"
           row-key="name"
           :pagination="initialPagination"
           :filter="filter"
           binary-state-sort
           :wrap-cells="wrap_cell"
         >
-          <!-- <template v-slot:top-left>
+          <template v-slot:top-left>
             <q-btn
               color="secondary"
               icon-right="archive"
@@ -46,20 +22,85 @@
               no-caps
               @click="exportTable"
             />
-          </template> -->
+          </template>
           <template v-slot:top-right>
             <q-input
               dense
               debounce="300"
               v-model="filter"
               placeholder="Search"
-              style="width: 100px"
+              style="width: 150px"
             >
               <template v-slot:append>
                 <q-icon name="search" />
               </template>
             </q-input>
           </template>
+          <template v-slot:body-cell-stock_rate="props">
+            <q-td :props="props">
+              <div>
+                <q-badge
+                  color="purple"
+                  class="text-subtitle1"
+                  :label="props.value"
+                />
+              </div>
+              <div class="my-table-details">
+                {{ props.row.created_at }}
+              </div>
+            </q-td>
+          </template>
+          <template v-slot:body-cell-end_rate="props">
+            <q-td :props="props">
+              <div>
+                <q-badge
+                  color="purple"
+                  class="text-subtitle1"
+                  :label="props.value"
+                />
+              </div>
+              <div class="my-table-details">
+                {{ props.row.bid_compare.created_at }}
+              </div>
+            </q-td>
+          </template>
+          <template v-slot:body-cell-status="props">
+            <q-td :props="props">
+              <div v-if="props.value == 1">
+                <q-badge
+                  color="green"
+                  label="WIN"
+                  class="text-caption text-weight-bold"
+                />
+              </div>
+              <div v-if="props.value == 2">
+                <q-badge
+                  color="red"
+                  label="LOSS"
+                  class="text-caption text-weight-bold"
+                />
+              </div>
+              <div v-if="props.value == 0">
+                <q-badge
+                  color="yellow"
+                  label="STABLE"
+                  class="text-caption text-weight-bold"
+                />
+              </div>
+            </q-td>
+          </template>
+          <!-- <template v-slot:body="props">
+          <q-tr :props="props">
+            <q-td key="name" :props="props">
+              {{ props.row.name }}
+            </q-td>
+            <q-td key="calories" :props="props">
+              <q-badge color="green">
+                {{ props.row.name }}
+              </q-badge>
+            </q-td>
+          </q-tr>
+        </template> -->
         </q-table>
       </q-card>
     </div>
@@ -89,48 +130,55 @@ function wrapCsvValue(val, formatFn) {
 }
 
 export default defineComponent({
-  name: "wallet",
+  name: "OrderHistory",
   data() {
     return {
       data: [],
-      deposit: [],
       filter: "",
       initialPagination: {
         sortBy: "desc",
         descending: false,
         page: 1,
-        rowsPerPage: 5,
+        rowsPerPage: 10,
       },
       // separator: "cell",
       wrap_cell: true,
       columns: [
         {
+          name: "stock_rate",
+          required: true,
+          align: "center",
+          label: "Open Price",
+          field: (row) => row.stock_rate,
+          // format: (val) => `${val}`,
+          // sortable: true,
+          style: "width: 500px",
+          headerStyle: "width: 500px;padding-inline: 10px",
+        },
+        {
+          name: "end_rate",
+          required: true,
+          align: "center",
+          label: "Close Price",
+          field: (row) => row.bid_compare.end_rate,
+          // format: (val) => `${val}`,
+          // sortable: true,
+          style: "width: 500px",
+          headerStyle: "width: 500px;padding-inline: 10px",
+        },
+        {
           name: "amount",
           required: true,
           align: "center",
-          label: "Deposit Amount",
-          field: (row) => row.amount,
-          // format: (val) => `${val}`,
-          // sortable: true,
-          style: "width: 400px",
+          label: "Amount",
+          field: "amount",
         },
         {
-          name: "fee",
+          name: "status",
           required: true,
           align: "center",
-          label: "Charges (%)",
-          field: (row) => row.fee,
-          // format: (val) => `${val}`,
-          // sortable: true,
-          style: "width: 300px",
-        },
-        {
-          name: "created_at",
-          required: true,
-          align: "center",
-          label: "Date",
-          field: (row) => row.created_at,
-          style: "width: 400px",
+          label: "Status",
+          field: (row) => row.bid_compare.status,
         },
       ],
     };
@@ -167,31 +215,13 @@ export default defineComponent({
     },
   },
   mounted() {
-    console.log("mounted");
     api.defaults.headers.Authorization =
       `Bearer ` + localStorage.getItem("token");
     api
-      .get("/api/v1/get_total_balance")
+      .get("/api/v1/order_history")
       .then((response) => {
         this.data = response.data.data;
-        // console.log(this.data)
-      })
-      .catch(() => {
-        this.$q.notify({
-          color: "negative",
-          position: "top",
-          message: "Loading failed",
-          icon: "report_problem",
-        });
-      });
-
-    api.defaults.headers.Authorization =
-      `Bearer ` + localStorage.getItem("token");
-    api
-      .get("/api/v1/deposit_history")
-      .then((response) => {
-        this.deposit = response.data.data;
-        // console.log(this.data)
+        // console.log(this.data);
       })
       .catch(() => {
         this.$q.notify({
@@ -205,10 +235,13 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-.my-card {
-  background: #f8e5e7;
-  border-color: #ff808e;
-  border-radius: 20px;
+<style>
+.my-table-details {
+  font-size: 0.85em;
+  font-style: italic;
+  max-width: 200px;
+  white-space: normal;
+  color: #555;
+  margin-top: 4px;
 }
 </style>

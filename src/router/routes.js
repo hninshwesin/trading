@@ -45,8 +45,9 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/Index.vue'), beforeEnter: guardMyroute },
-      { path: '/registration_code', component: () => import('pages/registration_code.vue'), beforeEnter: guardMyroute },
+      { path: '/registration_code', component: () => import('src/pages/RegistrationCode.vue'), beforeEnter: guardMyroute },
       { path: '/wallet', component: () => import('src/pages/wallet.vue'), beforeEnter: guardMyroute },
+      { path: '/order_history', component: () => import('src/pages/OrderHistory.vue'), beforeEnter: guardMyroute },
     ]
   },
 
