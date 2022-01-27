@@ -11,19 +11,13 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title>
-          Trading App
-        </q-toolbar-title>
+        <q-toolbar-title> Super Option </q-toolbar-title>
 
         <!-- <div>Quasar v{{ $q.version }}</div> -->
       </q-toolbar>
     </q-header>
 
-    <q-footer
-      elevated
-      class="bg-white text-primary"
-      style="height:65px;"
-    >
+    <q-footer elevated class="bg-white text-primary" style="height: 65px">
       <q-tabs
         no-caps
         active-color="primary"
@@ -49,19 +43,9 @@
       </q-tabs>
     </q-footer>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-      class="bg-grey-1"
-    >
+    <q-drawer v-model="leftDrawerOpen" show-if-above bordered class="bg-grey-1">
       <q-list>
-        <q-item-label
-          header
-          class="text-grey-8"
-        >
-          Menu Links
-        </q-item-label>
+        <q-item-label header class="text-grey-8"> Menu Links </q-item-label>
 
         <EssentialLink
           v-for="link in essentialLinks"
@@ -78,54 +62,54 @@
 </template>
 
 <script>
-import EssentialLink from 'components/EssentialLink.vue'
+import EssentialLink from "components/EssentialLink.vue";
 
 const linksList = [
   {
-    title: 'HomePage',
+    title: "HomePage",
     // caption: 'quasar.dev',
-    icon: 'emoji_people',
-    link: '#/home'
+    icon: "emoji_people",
+    link: "#/home",
   },
   {
-    title: 'Client Registration Secret Code',
+    title: "Client Registration Secret Code",
     // caption: 'quasar.dev',
-    icon: 'pin',
-    link: '#/registration_code'
+    icon: "pin",
+    link: "#/registration_code",
   },
   {
-    title: 'My Wallet',
+    title: "My Wallet",
     // caption: 'github.com/quasarframework',
-    icon: 'account_balance_wallet',
-    link: '#/wallet'
+    icon: "account_balance_wallet",
+    link: "#/wallet",
   },
   {
-    title: 'Sign Out',
+    title: "Sign Out",
     // caption: 'github.com/quasarframework',
-    icon: 'lock',
-    link: '#/signout'
+    icon: "lock",
+    link: "#/signout",
   },
 ];
 
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref } from "vue";
 
 export default defineComponent({
-  name: 'MainLayout',
+  name: "MainLayout",
 
   components: {
-    EssentialLink
+    EssentialLink,
   },
 
-  setup () {
-    const leftDrawerOpen = ref(false)
+  setup() {
+    const leftDrawerOpen = ref(false);
 
     return {
       essentialLinks: linksList,
       leftDrawerOpen,
-      toggleLeftDrawer () {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      }
-    }
-  }
-})
+      toggleLeftDrawer() {
+        leftDrawerOpen.value = !leftDrawerOpen.value;
+      },
+    };
+  },
+});
 </script>

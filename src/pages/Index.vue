@@ -44,22 +44,22 @@
         <q-form @submit.prevent="">
           <q-card-section>
             <div class="input">
-              <q-input
+              <q-select
                 rounded
                 outlined
                 v-model="amount"
-                label="Amount"
+                :options="amount_options"
+                label="Choose Amount"
                 label-color="primary"
                 bg-color="secondary"
-                type="number"
                 dark
                 standout
-                :rules="[(val) => !!val || 'Field is required']"
+                :rules="[(val) => (val && val != null) || 'Field is required']"
               >
                 <template v-slot:before>
                   <span style="color: black; font-size: 18px">Amount</span>
                 </template>
-              </q-input>
+              </q-select>
             </div>
           </q-card-section>
           <q-card-section>
@@ -186,9 +186,16 @@
     <div class="q-pa-md">
       <q-card>
         <q-card-section>
-          <div class="text-h6">Your Last Order</div>
+          <div class="text-h6">Today Order</div>
         </q-card-section>
-        <q-table :rows="order" :columns="columns" row-key="name" hide-bottom>
+        <q-table
+          :dense="$q.screen.lt.md"
+          :rows="order"
+          :columns="columns"
+          row-key="name"
+          hide-bottom
+          no-data-label="No data available"
+        >
           <template v-slot:body-cell-stock_rate="props">
             <q-td :props="props">
               <div>
@@ -291,7 +298,7 @@ export default defineComponent({
           //   { x: 1638773914000, y: [2773.34, 2787.83, 2780.8, 2784.55] },
           //   { x: 1638773915000, y: [2753.34, 2787.83, 2780.8, 2784.55] },
           //   { x: 1638773916000, y: [2783.34, 2783.83, 2780.8, 2784.55] },
-          //   { x: 1638773917000, y: [2883.34, 2787.83, 2780.8, 2784.59] },
+          //   { x: 1638773917000, y: [2883.34, 2787.83, 2780.8, 2780] },
           // ],
         },
       ],
@@ -309,7 +316,9 @@ export default defineComponent({
           type: "category",
           labels: {
             formatter: function (val) {
-              return dayjs(val).format("MMM DD HH:mm:ss");
+              // return dayjs(val).format("MMM DD HH:mm:ss");
+              // return dayjs(val).tz("Asia/Yangon").format("HH:mm");
+              return dayjs(val).format("HH:mm");
             },
           },
         },
@@ -317,9 +326,19 @@ export default defineComponent({
           tooltip: {
             enabled: true,
           },
+          // min: "",
+          // max: "",
         },
       },
       amount: "",
+      amount_options: [
+        { label: "100", value: "100" },
+        { label: "300", value: "300" },
+        { label: "500", value: "500" },
+        { label: "700", value: "700" },
+        { label: "900", value: "900" },
+        { label: "1000", value: "1000" },
+      ],
       minute: "",
       options: [
         { label: "1 minute", value: "1" },
@@ -338,7 +357,7 @@ export default defineComponent({
           align: "center",
           label: "Open Price",
           field: (row) => row.stock_rate,
-          // format: (val) => `${val}`,
+          format: (val) => `${val}`,
           // sortable: true,
           // style: "width: 500px",
           // headerStyle: "width: 500px;padding-inline: 10px",
@@ -379,6 +398,8 @@ export default defineComponent({
       .then((response) => {
         this.series[0].data = response.data.data;
         console.log(this.series[0].data);
+        // this.series[0].chartOptions.yaxis.max = response.data.high_price;
+        // this.series[0].chartOptions.yaxis.min = response.data.low_price;
       })
       .catch(() => {
         this.$q.notify({
@@ -414,8 +435,10 @@ export default defineComponent({
 
     api.defaults.headers.Authorization =
       `Bearer ` + localStorage.getItem("token");
-    api.get("/api/v1/last_order_history").then((response) => {
+    api.get("/api/v1/today_order_history").then((response) => {
       this.order = response.data.data;
+      // console.log(this.order);
+      // console.log(this.order.bid_compare);
     });
 
     api.defaults.headers.Authorization =
@@ -440,25 +463,35 @@ export default defineComponent({
     subscribe() {
       const app = this;
       Pusher.logToConsole = true;
-
       var pusher = new Pusher("4049c3e38649d1f7df88", {
         cluster: "ap1",
         forceTLS: true,
       });
       var channel = pusher.subscribe("goldapiData");
       channel.bind("App\\Events\\GoldPriceSend", function (data) {
-        if (app.series[0].data.length > 20) app.series[0].data.shift();
-        app.series[0].data.push(data.goldapi);
+        if (app.series[0].data.length > 5) app.series[0].data.shift();
+        app.series[0].data.pop();
+        app.series[0].data = app.series[0].data.concat(data.goldapi);
+        console.log(app.series[0].data);
+      });
+      var channel = pusher.subscribe("everysecond_goldapiData");
+      channel.bind("App\\Events\\GoldPriceSendEverySecond", function (data) {
+        // app.series[0].data.pop();
+        // app.series[0].data.push(data.everysecond_goldapi);
+        app.series[0].data[app.series[0].data.length - 1] =
+          data.everysecond_goldapi;
+        console.log(app.series[0].data);
       });
     },
     BuySubmit() {
-      if (this.minute.value != null && this.amount.length != 0) {
+      // if (this.minute.value != null && this.amount.length != 0) {
+      if (this.amount.value != null && this.minute.value != null) {
         // this.buy_popup = true;
-        console.log(this.amount);
+        console.log(this.amount.value);
         console.log(this.minute.value);
 
         const formData = new FormData();
-        formData.append("amount", this.amount);
+        formData.append("amount", this.amount.value);
         formData.append("minute", this.minute.value);
         api.defaults.headers.Authorization =
           `Bearer ` + localStorage.getItem("token");
@@ -466,6 +499,8 @@ export default defineComponent({
           .post("/api/v1/buy_order_create", formData)
           .then((response) => {
             console.log("buy");
+            console.log(response.data);
+            console.log(response.data.error_code);
             console.log(response.data.order.bid_status);
             if (response.data.error_code === "0") {
               this.current_order = response.data.order;
@@ -503,10 +538,9 @@ export default defineComponent({
             }
           })
           .catch((err) => {
-            // console.log(err.response.data)
             this.$q.notify({
               type: "negative",
-              message: err.response.data.message,
+              message: err.response,
             });
           });
       } else {
@@ -517,13 +551,14 @@ export default defineComponent({
       }
     },
     SellSubmit() {
-      if (this.minute.value != null && this.amount.length != 0) {
+      // if (this.minute.value != null && this.amount.length != 0) {
+      if (this.amount.value != null && this.minute.value != null) {
         // this.buy_popup = true;
-        console.log(this.amount);
+        console.log(this.amount.value);
         console.log(this.minute.value);
 
         const formData = new FormData();
-        formData.append("amount", this.amount);
+        formData.append("amount", this.amount.value);
         formData.append("minute", this.minute.value);
         api.defaults.headers.Authorization =
           `Bearer ` + localStorage.getItem("token");
@@ -669,6 +704,7 @@ export default defineComponent({
   font-size: 16px;
   letter-spacing: 0px;
   line-height: 1.2;
+  color: black;
   /* padding: 0 20px */
 }
 .minute {

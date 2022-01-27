@@ -94,6 +94,7 @@ export default defineComponent({
     return {
       data: [],
       deposit: [],
+      // withdraw: [],
       filter: "",
       initialPagination: {
         sortBy: "desc",
@@ -133,6 +134,36 @@ export default defineComponent({
           style: "width: 400px",
         },
       ],
+      // withdraw_columns: [
+      //   {
+      //     name: "amount",
+      //     required: true,
+      //     align: "center",
+      //     label: "Withdraw Amount",
+      //     field: (row) => row.amount,
+      //     // format: (val) => `${val}`,
+      //     // sortable: true,
+      //     style: "width: 400px",
+      //   },
+      //   {
+      //     name: "fee",
+      //     required: true,
+      //     align: "center",
+      //     label: "Charges (%)",
+      //     field: (row) => row.fee,
+      //     // format: (val) => `${val}`,
+      //     // sortable: true,
+      //     style: "width: 300px",
+      //   },
+      //   {
+      //     name: "created_at",
+      //     required: true,
+      //     align: "center",
+      //     label: "Date",
+      //     field: (row) => row.created_at,
+      //     style: "width: 400px",
+      //   },
+      // ],
     };
   },
   methods: {
@@ -201,6 +232,23 @@ export default defineComponent({
           icon: "report_problem",
         });
       });
+
+    // api.defaults.headers.Authorization =
+    //   `Bearer ` + localStorage.getItem("token");
+    // api
+    //   .get("/api/v1/withdraw_history")
+    //   .then((response) => {
+    //     this.deposit = response.data.data;
+    //     console.log(this.data);
+    //   })
+    //   .catch(() => {
+    //     this.$q.notify({
+    //       color: "negative",
+    //       position: "top",
+    //       message: "Loading failed",
+    //       icon: "report_problem",
+    //     });
+    //   });
   },
 });
 </script>

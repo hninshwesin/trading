@@ -6,6 +6,7 @@
           <div class="text-h6">Your Order History</div>
         </q-card-section>
         <q-table
+          :dense="$q.screen.lt.md"
           :rows="data"
           :columns="columns"
           row-key="name"
@@ -29,7 +30,7 @@
               debounce="300"
               v-model="filter"
               placeholder="Search"
-              style="width: 150px"
+              style="width: 100px"
             >
               <template v-slot:append>
                 <q-icon name="search" />
@@ -152,8 +153,8 @@ export default defineComponent({
           field: (row) => row.stock_rate,
           // format: (val) => `${val}`,
           // sortable: true,
-          style: "width: 500px",
-          headerStyle: "width: 500px;padding-inline: 10px",
+          // style: "width: 500px",
+          // headerStyle: "width: 500px;padding-inline: 10px",
         },
         {
           name: "end_rate",
@@ -163,8 +164,8 @@ export default defineComponent({
           field: (row) => row.bid_compare.end_rate,
           // format: (val) => `${val}`,
           // sortable: true,
-          style: "width: 500px",
-          headerStyle: "width: 500px;padding-inline: 10px",
+          // style: "width: 500px",
+          // headerStyle: "width: 500px;padding-inline: 10px",
         },
         {
           name: "amount",
