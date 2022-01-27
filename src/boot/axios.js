@@ -16,8 +16,8 @@ import dayjs from 'dayjs'
 // good idea to move this instance creation inside of the
 // "export default () => {}" function below (which runs individually
 // for each client)
-const api = axios.create({ baseURL: 'http://gambling.local', headers: { Authorization: '' } })
-// const api = axios.create({ baseURL: 'http://159.223.93.73', headers: { Authorization: '' } })
+// const api = axios.create({ baseURL: 'http://gambling.local', headers: { Authorization: '' } })
+const api = axios.create({ baseURL: 'http://159.223.93.73', headers: { Authorization: '' } })
 // const trade_api = axios.create({ baseURL: 'https://www.goldapi.io', headers: { "x-access-token" : "goldapi-aaqdoetkunu1104-io", "Content-Type": "application/json" } })
 
 export default boot(({ app }) => {

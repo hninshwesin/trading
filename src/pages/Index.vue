@@ -469,7 +469,7 @@ export default defineComponent({
       });
       var channel = pusher.subscribe("goldapiData");
       channel.bind("App\\Events\\GoldPriceSend", function (data) {
-        if (app.series[0].data.length > 5) app.series[0].data.shift();
+        if (app.series[0].data.length > 10) app.series[0].data.shift();
         app.series[0].data.pop();
         app.series[0].data = app.series[0].data.concat(data.goldapi);
         console.log(app.series[0].data);
