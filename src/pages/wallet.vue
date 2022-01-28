@@ -24,43 +24,34 @@
       </q-card>
     </div>
     <div class="q-pa-md">
-      <q-card>
+      <q-card class="card full-width" bordered>
         <!-- <q-card-section>
           <div class="text-h6">Your Deposit History</div>
         </q-card-section> -->
-        <q-table
-          :rows="deposit"
-          :columns="columns"
-          title="Your Deposit History"
-          row-key="name"
-          :pagination="initialPagination"
-          :filter="filter"
-          binary-state-sort
-          :wrap-cells="wrap_cell"
-        >
-          <!-- <template v-slot:top-left>
-            <q-btn
-              color="secondary"
-              icon-right="archive"
-              label="Export to csv"
-              no-caps
-              @click="exportTable"
+        <q-card-section>
+          <div class="text-center deposit" @click="$router.push('/deposit')">
+            Deposit Request & History
+            <q-icon
+              name="fas fa-arrow-circle-right"
+              color="black"
+              size="20px"
+              class="q-ml-xs"
             />
-          </template> -->
-          <template v-slot:top-right>
-            <q-input
-              dense
-              debounce="300"
-              v-model="filter"
-              placeholder="Search"
-              style="width: 100px"
-            >
-              <template v-slot:append>
-                <q-icon name="search" />
-              </template>
-            </q-input>
-          </template>
-        </q-table>
+          </div>
+        </q-card-section>
+      </q-card>
+      <q-card class="card full-width" bordered>
+        <q-card-section>
+          <div class="text-center withdraw" @click="$router.push('/withdraw')">
+            Withdraw Request & History
+            <q-icon
+              name="fas fa-arrow-circle-right"
+              color="black"
+              size="20px"
+              class="q-ml-xs"
+            />
+          </div>
+        </q-card-section>
       </q-card>
     </div>
   </q-page>
@@ -93,77 +84,6 @@ export default defineComponent({
   data() {
     return {
       data: [],
-      deposit: [],
-      // withdraw: [],
-      filter: "",
-      initialPagination: {
-        sortBy: "desc",
-        descending: false,
-        page: 1,
-        rowsPerPage: 5,
-      },
-      // separator: "cell",
-      wrap_cell: true,
-      columns: [
-        {
-          name: "amount",
-          required: true,
-          align: "center",
-          label: "Deposit Amount",
-          field: (row) => row.amount,
-          // format: (val) => `${val}`,
-          // sortable: true,
-          style: "width: 400px",
-        },
-        {
-          name: "fee",
-          required: true,
-          align: "center",
-          label: "Charges (%)",
-          field: (row) => row.fee,
-          // format: (val) => `${val}`,
-          // sortable: true,
-          style: "width: 300px",
-        },
-        {
-          name: "created_at",
-          required: true,
-          align: "center",
-          label: "Date",
-          field: (row) => row.created_at,
-          style: "width: 400px",
-        },
-      ],
-      // withdraw_columns: [
-      //   {
-      //     name: "amount",
-      //     required: true,
-      //     align: "center",
-      //     label: "Withdraw Amount",
-      //     field: (row) => row.amount,
-      //     // format: (val) => `${val}`,
-      //     // sortable: true,
-      //     style: "width: 400px",
-      //   },
-      //   {
-      //     name: "fee",
-      //     required: true,
-      //     align: "center",
-      //     label: "Charges (%)",
-      //     field: (row) => row.fee,
-      //     // format: (val) => `${val}`,
-      //     // sortable: true,
-      //     style: "width: 300px",
-      //   },
-      //   {
-      //     name: "created_at",
-      //     required: true,
-      //     align: "center",
-      //     label: "Date",
-      //     field: (row) => row.created_at,
-      //     style: "width: 400px",
-      //   },
-      // ],
     };
   },
   methods: {
@@ -215,40 +135,6 @@ export default defineComponent({
           icon: "report_problem",
         });
       });
-
-    api.defaults.headers.Authorization =
-      `Bearer ` + localStorage.getItem("token");
-    api
-      .get("/api/v1/deposit_history")
-      .then((response) => {
-        this.deposit = response.data.data;
-        // console.log(this.data)
-      })
-      .catch(() => {
-        this.$q.notify({
-          color: "negative",
-          position: "top",
-          message: "Loading failed",
-          icon: "report_problem",
-        });
-      });
-
-    // api.defaults.headers.Authorization =
-    //   `Bearer ` + localStorage.getItem("token");
-    // api
-    //   .get("/api/v1/withdraw_history")
-    //   .then((response) => {
-    //     this.deposit = response.data.data;
-    //     console.log(this.data);
-    //   })
-    //   .catch(() => {
-    //     this.$q.notify({
-    //       color: "negative",
-    //       position: "top",
-    //       message: "Loading failed",
-    //       icon: "report_problem",
-    //     });
-    //   });
   },
 });
 </script>
@@ -258,5 +144,40 @@ export default defineComponent({
   background: #f8e5e7;
   border-color: #ff808e;
   border-radius: 20px;
+}
+.card {
+  /* width: 349px;
+  height: 50px; */
+  box-shadow: 2px 3px 22px -2px rgba(0, 0, 0, 0.25);
+  background-color: #ffffff;
+  overflow: visible;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+.deposit {
+  width: auto; /* 151px */
+  height: auto; /* 19px */
+  overflow: visible;
+  white-space: pre;
+  font-weight: 599;
+  font-family: ".SFNSDisplay-Semibold", "SFProDisplay-Semibold",
+    "SFUIDisplay-Semibold", ".SFUIDisplay-Semibold", "SF Pro Display",
+    "-apple-system", "BlinkMacSystemFont", sans-serif;
+  color: #f4a601;
+  font-size: 16px;
+  line-height: 1.2;
+}
+.withdraw {
+  width: auto; /* 151px */
+  height: auto; /* 19px */
+  overflow: visible;
+  white-space: pre;
+  font-weight: 599;
+  font-family: ".SFNSDisplay-Semibold", "SFProDisplay-Semibold",
+    "SFUIDisplay-Semibold", ".SFUIDisplay-Semibold", "SF Pro Display",
+    "-apple-system", "BlinkMacSystemFont", sans-serif;
+  color: #f4a601;
+  font-size: 16px;
+  line-height: 1.2;
 }
 </style>

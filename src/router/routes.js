@@ -48,6 +48,8 @@ const routes = [
       { path: '/registration_code', component: () => import('src/pages/RegistrationCode.vue'), beforeEnter: guardMyroute },
       { path: '/wallet', component: () => import('src/pages/wallet.vue'), beforeEnter: guardMyroute },
       { path: '/order_history', component: () => import('src/pages/OrderHistory.vue'), beforeEnter: guardMyroute },
+      { path: '/deposit', component: () => import('src/pages/Deposit.vue'), beforeEnter: guardMyroute },
+      { path: '/withdraw', component: () => import('src/pages/Withdraw.vue'), beforeEnter: guardMyroute },
     ]
   },
 
