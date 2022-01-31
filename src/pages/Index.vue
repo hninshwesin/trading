@@ -193,8 +193,7 @@
           :rows="order"
           :columns="columns"
           row-key="name"
-          hide-bottom
-          no-data-label="No data available"
+          no-data-label="You don't have any order for today"
         >
           <template v-slot:body-cell-stock_rate="props">
             <q-td :props="props">
