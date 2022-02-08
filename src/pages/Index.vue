@@ -28,7 +28,7 @@
       ></apexchart>
     </div>
 
-    <div class="q-pa-md text-h4">Current Price {{ current_price }}</div>
+    <div class="q-pa-md text-h5">Current Price {{ current_price }}</div>
 
     <div class="q-pa-md items-start">
       <q-card class="my-card full-width" bordered>
