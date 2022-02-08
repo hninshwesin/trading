@@ -60,34 +60,38 @@
                   :label="props.value"
                 />
               </div>
-              <div class="my-table-details">
+              <div class="my-table-details" v-if="props.row.bid_compare">
                 {{ props.row.bid_compare.created_at }}
               </div>
+              <div class="my-table-details" v-else></div>
             </q-td>
           </template>
           <template v-slot:body-cell-status="props">
             <q-td :props="props">
-              <div v-if="props.value == 1">
-                <q-badge
-                  color="green"
-                  label="WIN"
-                  class="text-caption text-weight-bold"
-                />
+              <div v-if="props.row.bid_compare">
+                <div v-if="props.value == 1">
+                  <q-badge
+                    color="green"
+                    label="WIN"
+                    class="text-caption text-weight-bold"
+                  />
+                </div>
+                <div v-if="props.value == 2">
+                  <q-badge
+                    color="red"
+                    label="LOSS"
+                    class="text-caption text-weight-bold"
+                  />
+                </div>
+                <div v-if="props.value == 0">
+                  <q-badge
+                    color="yellow"
+                    label="STABLE"
+                    class="text-caption text-weight-bold"
+                  />
+                </div>
               </div>
-              <div v-if="props.value == 2">
-                <q-badge
-                  color="red"
-                  label="LOSS"
-                  class="text-caption text-weight-bold"
-                />
-              </div>
-              <div v-if="props.value == 0">
-                <q-badge
-                  color="yellow"
-                  label="STABLE"
-                  class="text-caption text-weight-bold"
-                />
-              </div>
+              <div v-else>-</div>
             </q-td>
           </template>
           <!-- <template v-slot:body="props">
@@ -161,7 +165,7 @@ export default defineComponent({
           required: true,
           align: "center",
           label: "Close Price",
-          field: (row) => row.bid_compare.end_rate,
+          field: (row) => (row.bid_compare ? row.bid_compare.end_rate : ""),
           // format: (val) => `${val}`,
           // sortable: true,
           // style: "width: 500px",
@@ -179,7 +183,7 @@ export default defineComponent({
           required: true,
           align: "center",
           label: "Status",
-          field: (row) => row.bid_compare.status,
+          field: (row) => (row.bid_compare ? row.bid_compare.status : ""),
         },
       ],
     };
