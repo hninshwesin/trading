@@ -28,6 +28,8 @@
       ></apexchart>
     </div>
 
+    <div class="q-pa-md text-h4">Current Price {{ current_price }}</div>
+
     <div class="q-pa-md items-start">
       <q-card class="my-card full-width" bordered>
         <q-card-section>
@@ -391,6 +393,7 @@ export default defineComponent({
           field: (row) => (row.bid_compare ? row.bid_compare.status : ""),
         },
       ],
+      current_price: 1800,
     };
   },
   created() {
@@ -484,6 +487,10 @@ export default defineComponent({
         app.series[0].data[app.series[0].data.length - 1] =
           data.everysecond_goldapi;
         console.log(app.series[0].data);
+      });
+      channel.bind("App\\Events\\CurrentPrice", function (data) {
+        app.current_price = data.current_price;
+        console.log(data);
       });
     },
     BuySubmit() {
