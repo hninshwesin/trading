@@ -123,7 +123,7 @@
     </q-card>
     <!-- </div> -->
     <!-- <div class="q-pa-md text-center" > -->
-    <q-card
+    <!-- <q-card
       class="col-8 justify-center text-h5 text-center text-weight-bold"
       v-else
     >
@@ -137,12 +137,8 @@
           <q-icon name="warning" color="warning" size="20px" class="q-ml-xs" />
           Currently you doesn't have any buy or sell price
         </q-badge>
-        <!-- <q-badge outline align="middle" color="teal" font-size="15px">
-              Currently you doesn't have any buy or sell price
-            </q-badge> -->
-        <!-- <div class="text-h7">Currently you doesn't have any buy or sell price</div> -->
       </q-card-section>
-    </q-card>
+    </q-card> -->
     <!-- </div> -->
 
     <q-separator />

@@ -61,22 +61,25 @@
             </template>
           </q-input>
         </template>
-        <template v-slot:body-cell-approve="props">
+        <template v-slot:body-cell-approve_status="props">
           <q-td :props="props">
-            <div v-if="props.value == 0">
-              <q-badge
-                color="yellow"
-                label="Pending"
-                class="text-caption text-weight-bold"
-              />
+            <div v-if="props.row">
+              <div v-if="props.value == 1">
+                <q-badge
+                  color="green"
+                  label="Success"
+                  class="text-caption text-weight-bold"
+                />
+              </div>
+              <div v-if="props.value == 0">
+                <q-badge
+                  color="yellow"
+                  label="Pending"
+                  class="text-caption text-weight-bold"
+                />
+              </div>
             </div>
-            <div v-if="props.value == 1">
-              <q-badge
-                color="green"
-                label="Success"
-                class="text-caption text-weight-bold"
-              />
-            </div>
+            <div v-else>-</div>
           </q-td>
         </template>
       </q-table>
@@ -114,16 +117,16 @@ export default {
           // sortable: true,
           style: "width: 500px",
         },
-        {
-          name: "fee",
-          required: true,
-          align: "center",
-          label: "Charges(%)",
-          field: (row) => row.fee,
-          // format: (val) => `${val}`,
-          // sortable: true,
-          style: "width: 300px",
-        },
+        // {
+        //   name: "fee",
+        //   required: true,
+        //   align: "center",
+        //   label: "Charges(%)",
+        //   field: (row) => row.fee,
+        //   // format: (val) => `${val}`,
+        //   // sortable: true,
+        //   style: "width: 300px",
+        // },
         {
           name: "created_at",
           required: true,
@@ -133,7 +136,7 @@ export default {
           style: "width: 400px",
         },
         {
-          name: "approve",
+          name: "approve_status",
           required: true,
           align: "center",
           label: "Approve",
