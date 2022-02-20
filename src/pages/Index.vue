@@ -546,7 +546,7 @@ export default defineComponent({
           .catch((err) => {
             this.$q.notify({
               type: "negative",
-              message: err.response,
+              message: err.response.data.message,
             });
           });
       } else {
