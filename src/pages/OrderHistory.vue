@@ -66,6 +66,24 @@
               <div class="my-table-details" v-else></div>
             </q-td>
           </template>
+          <template v-slot:body-cell-bid_status="props">
+            <q-td :props="props">
+              <div v-if="!props.row.bid_status">
+                <q-badge
+                  color="green"
+                  label="BUY"
+                  class="text-caption text-weight-bold"
+                />
+              </div>
+              <div v-if="props.value">
+                <q-badge
+                  color="red"
+                  label="SELL"
+                  class="text-caption text-weight-bold"
+                />
+              </div>
+            </q-td>
+          </template>
           <template v-slot:body-cell-status="props">
             <q-td :props="props">
               <div v-if="props.row.bid_compare">
@@ -179,6 +197,17 @@ export default defineComponent({
           field: "amount",
         },
         {
+          name: "bid_status",
+          required: true,
+          align: "center",
+          label: "Bid Status",
+          field: (row) => row.bid_status,
+          // format: (val) => `${val}`,
+          // sortable: true,
+          // style: "width: 500px",
+          // headerStyle: "width: 500px;padding-inline: 10px",
+        },
+        {
           name: "status",
           required: true,
           align: "center",
@@ -226,7 +255,7 @@ export default defineComponent({
       .get("/api/v1/order_history")
       .then((response) => {
         this.data = response.data.data;
-        // console.log(this.data);
+        console.log(this.data);
       })
       .catch(() => {
         this.$q.notify({

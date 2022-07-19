@@ -222,6 +222,24 @@
               <div class="my-table-details" v-else></div>
             </q-td>
           </template>
+          <template v-slot:body-cell-bid_status="props">
+            <q-td :props="props">
+              <div v-if="!props.row.bid_status">
+                <q-badge
+                  color="green"
+                  label="BUY"
+                  class="text-caption text-weight-bold"
+                />
+              </div>
+              <div v-if="props.value">
+                <q-badge
+                  color="red"
+                  label="SELL"
+                  class="text-caption text-weight-bold"
+                />
+              </div>
+            </q-td>
+          </template>
           <template v-slot:body-cell-status="props">
             <q-td :props="props">
               <div v-if="props.row.bid_compare">
@@ -382,6 +400,17 @@ export default defineComponent({
           field: "amount",
         },
         {
+          name: "bid_status",
+          required: true,
+          align: "center",
+          label: "Bid Status",
+          field: (row) => row.bid_status,
+          // format: (val) => `${val}`,
+          // sortable: true,
+          // style: "width: 500px",
+          // headerStyle: "width: 500px;padding-inline: 10px",
+        },
+        {
           name: "status",
           required: true,
           align: "center",
@@ -509,6 +538,7 @@ export default defineComponent({
             console.log(response.data.error_code);
             console.log(response.data.order.bid_status);
             if (response.data.error_code === "0") {
+              this.order.push(response.data.order);
               this.current_order = response.data.order;
               console.log(this.current_order);
               console.log(response.data.order.minute);
@@ -574,6 +604,7 @@ export default defineComponent({
             console.log("buy");
             console.log(response.data.order.bid_status);
             if (response.data.error_code === "0") {
+              this.order.push(response.data.order);
               this.current_order = response.data.order;
               console.log(this.current_order);
               console.log(response.data.order.minute);
