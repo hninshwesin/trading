@@ -184,14 +184,14 @@
     <div class="q-pa-md">
       <q-card>
         <q-card-section>
-          <div class="text-h6">Today Order</div>
+          <div class="text-h6">Current Order</div>
         </q-card-section>
         <q-table
           :dense="$q.screen.lt.md"
           :rows="order"
           :columns="columns"
           row-key="name"
-          no-data-label="You don't have any order for today"
+          no-data-label="You don't have any order currently"
         >
           <template v-slot:body-cell-stock_rate="props">
             <q-td :props="props">
